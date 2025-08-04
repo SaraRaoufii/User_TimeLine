@@ -20,7 +20,6 @@ class Users(AbstractBaseUser):
     email = models.EmailField(unique=True)
     address = models.TextField(blank=True , default='')
     is_active = models.BooleanField(default=True)
-    is_authenticated = models.BooleanField(default=False)
     role = models.CharField(max_length=10, choices=USER_ROLE_CHOICES, default='normal')
     is_staff = models.BooleanField(default=False)
     objects = CustomUserManager()

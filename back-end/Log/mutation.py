@@ -6,6 +6,13 @@ class DeleteLogs(graphene.Mutation):
         id = graphene.ID(required=True)
     ok = graphene.Boolean()
     def mutate(self, info , id):
+        current_user = info.context.user
+        if not current_user.is_authenticated:
+            raise Exception("You should login")
+
+        if current_user.role !="admin":
+            raise Exception("You do not have access")
+        
         try:
             log = Logs.objects.get(pk=id)
             if log.is_protected:
@@ -25,6 +32,13 @@ class DeleteAllLogs(graphene.Mutation):
 
     delete_all = graphene.Boolean()
     def mutate(self, info ):
+        current_user = info.context.user
+        if not current_user.is_authenticated:
+            raise Exception("You should login")
+
+        if current_user.role !="admin":
+            raise Exception("You do not have access")
+        
         Logs.objects.filter(is_protected=False).delete()
         send_delete_all()
         return DeleteAllLogs(delete_all=True)

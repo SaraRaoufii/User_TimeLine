@@ -1,5 +1,6 @@
 import graphene
 import graphql_jwt
+from graphql_jwt.shortcuts import get_token
 from Users.models import Users
 from Users.type import UserType
 from Log.models import Logs
@@ -25,13 +26,14 @@ class CreateUser(graphene.Mutation):
     user = graphene.Field(UserType)
     def mutate(self, info, username, password, first_name, last_name, phone, email, address , role):
         current_user = info.context.user
+        print("Authenticated:", current_user.is_authenticated)
         if not current_user.is_authenticated:
             raise Exception("You should login")
         
         # if not current_user.is_staff:
         #     raise Exception("You do not have access")
         
-        if not current_user.role !="admin":
+        if current_user.role !="admin":
             raise Exception("You do not have access")
         
         target_user = Users(username=username, password=password, first_name=first_name, last_name=last_name, phone=phone , email=email, address=address, role=role)
@@ -149,34 +151,40 @@ class LoginUser(graphene.Mutation):
     success = graphene.Boolean()
     message = graphene.String()
     user_id = graphene.ID()
+    tocken = graphene.String()
     def mutate(self, info , username, password):
         user = authenticate(username=username , password=password)
         if user is None:
             return LoginUser(success=False, message= "Your informaitions are false" , user_id=None)
         else:
             send_login(user)
+            tocken=get_token(user)
             print(user)
-            return LoginUser(success=True, message= "You login successfull" , user_id=user.id)
+            return LoginUser(success=True, message= "You login successfull" , user_id=user.id, tocken=tocken)
 
 class LogoutUser(graphene.Mutation):
     success = graphene.Boolean()
     message = graphene.String()
+
     def mutate(self, info):
         user = info.context.user
         request = info.context
 
-        if user.is_authenticated:
-            send_logout(user)
-            logout(request)
-            return LogoutUser(success=True, message="User logged out successfully.")
-        else:
-            return LogoutUser(success=False, message="User is not authenticated.")
-            
+        if not user.is_authenticated:
+            return LogoutUser(success=False, message="Invalid or missing token.")
+
+        send_logout(user)
+
+        logout(request)
+
+        return LogoutUser
 
 class AuthMutation(graphene.ObjectType):
-    token_auth = graphql_jwt.ObtainJSONWebToken.Field()
+    login_user = LoginUser.Field()
+    logout_user = LogoutUser.Field()
     verify_token = graphql_jwt.Verify.Field()
     refresh_token = graphql_jwt.Refresh.Field()
+
 
 
 class UserMutation(graphene.ObjectType):

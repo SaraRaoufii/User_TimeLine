@@ -11,8 +11,13 @@ const GET_TIMELINE = gql`
             allLogs{
                 id
                 actionType
-                user{
-                username
+                actorUser{
+                  id
+                  username
+                }
+                targetUser{
+                  id
+                  username
                 }
                 actionTime
                 description
@@ -63,8 +68,9 @@ export default {
         :key="item.id"
         :date="item.actionTime"
         :description="item.description"
-        :user="item.user"
+        :user="item.actoruser"
         :action="item.actionType"
+        :targetuser="item.targetuser"
       >
         {{ item.content }}
       </Timeline>
