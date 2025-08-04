@@ -1,11 +1,196 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <title>Manage Logs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    body {
+      margin: 0;
+      background: #fcf7ec;
+      color: #222;
+    }
+    .container {
+      padding: 2rem;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .header h1 {
+      font-size: 1.5rem;
+    }
+    .stats {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    .stats div {
+      font-weight: bold;
+      color: #2b4eff;
+    }
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .toolbar input {
+      padding: 0.5rem 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 250px;
+    }
+    .toolbar button {
+      padding: 0.5rem 1rem;
+      background: #2b4eff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .tabs div {
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+    .tabs .active {
+      border-bottom: 2px solid #2b4eff;
+      font-weight: bold;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+      vertical-align: top;
+    }
+    th {
+      background: #f4f4f4;
+      font-weight: 600;
+    }
+    .badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      color: white;
+      font-size: 0.8rem;
+      display: inline-block;
+    }
+    .green { background: #10b981; }
+    .red { background: #ef4444; }
+    .purple { background: #8b5cf6; }
+    .icon {
+      margin-right: 6px;
+    }
+    .description-box {
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 0.9rem;
+    }
+    .description-box .old {
+      color: #dc2626;
+    }
+    .description-box .new {
+      color: #10b981;
+    }
+  </style>
 </head>
 <body>
-    
+  <div class="container">
+    <div class="header">
+      <h1>Manage Logs</h1>
+      <div class="stats">
+        <button>+ Add User</button>
+        <div>🧑‍💼 5 Admins</div>
+        <div>👥 20 Users</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <input type="text" placeholder="Search for logs here" />
+      <button>🔍 Filters</button>
+    </div>
+
+    <div class="tabs">
+      <div class="active">Table</div>
+      <div>Time Line</div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Actor</th>
+          <th>Target user</th>
+          <th>Action</th>
+          <th>Time</th>
+          <th>Discription</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>👤 sana_r</td>
+          <td>sara.r99</td>
+          <td><span class="badge green">Create User</span></td>
+          <td>2025-08-21 07:51</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>👤 ali.12</td>
+          <td>ali_dev</td>
+          <td><span class="badge green">Create User</span></td>
+          <td>2025-08-20 07:51</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>👤 nima2025</td>
+          <td>nima2025</td>
+          <td><span class="badge red">Delete User</span></td>
+          <td>2025-08-19 07:51</td>
+          <td></td>
+        </tr>
+
+<tr>
+  <td>4</td>
+  <td>👤 nima2020</td>
+  <td>nima2020</td>
+  <td><span class="badge purple">Update User</span></td>
+  <td>2025-08-18 07:51</td>
+  <td>
+    <div class="description-box">
+      <strong>Username:</strong> <span class="old">nima2020</span> → <span class="new">nima2025</span><br>
+      <strong>Email:</strong> <span class="old">nima2020@example.com</span> → <span class="new">hnima2025@example.com</span><br>
+      <strong>Address:</strong><br>
+      <span class="old">📍 No. 12, Elm Street,<br>District 4, Tehran, Iran</span><br>
+      →<br>
+      <span class="new">📍 Apt 45, Block B,<br>Enghelab Ave, Tehran, Iran</span>
+    </div>
+  </td>
+</tr>
+
+        <!-- More rows -->
+      </tbody>
+    </table>
+  </div>
 </body>
 </html>
