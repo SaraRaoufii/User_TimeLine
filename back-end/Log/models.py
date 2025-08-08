@@ -19,6 +19,8 @@ class Logs(models.Model):
     action_type = models.CharField(choices=Actions_Types , max_length=20)
     action_time = models.DateTimeField(auto_now_add=True)
     action_status = models.CharField(choices=Action_Status , default="SUCCESS" , max_length=10)
+    action_title = models.CharField(max_length=255 , blank=True , null=True)
+    category = models.CharField(max_length=255 , blank=True , null=True)
     description = models.TextField(blank=True , null=True)
     is_protected = models.BooleanField(default=False)
     

@@ -17,8 +17,7 @@ class DeleteLogs(graphene.Mutation):
             log = Logs.objects.get(pk=id)
             if log.is_protected:
                 raise Exception("This log can not delete")
-            user=log.user
-            send_delete(user,log)
+            send_delete(current_user,log)
             log.delete()
             return DeleteLogs(ok=True)
         
@@ -40,7 +39,7 @@ class DeleteAllLogs(graphene.Mutation):
             raise Exception("You do not have access")
         
         Logs.objects.filter(is_protected=False).delete()
-        send_delete_all()
+        send_delete_all(current_user)
         return DeleteAllLogs(delete_all=True)
     
 
@@ -51,14 +50,17 @@ class LogMutation(graphene.ObjectType):
 
 def send_delete(user,log):
     Logs.objects.create(
-        user=user,
+        actor_user=user,
+        action_title="Delete log",
         action_type="DELETE_LOG",
         description=f"delete log {log.id}: {log}",
         is_protected=True,
     )
 
-def send_delete_all():
+def send_delete_all(user):
     Logs.objects.create(
+        actor_user=user, 
+        action_title="Delete all logs",
         action_type="DELETE_ALL_LOGS",
         description=f"delete all logs",
         is_protected=True,

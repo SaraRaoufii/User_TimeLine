@@ -18,9 +18,11 @@ class Auth_Logs(models.Model):
     action_time = models.DateTimeField(auto_now_add=True)
     action_status = models.CharField(choices=Action_Status , default="SUCCESS" , max_length=10)
     description = models.TextField(blank=True , null=True)
+    action_title = models.CharField(max_length=255 , blank=True , null=True)
     is_protected = models.BooleanField(default=False)
 
 
     def __str__(self) -> str:
-        return f"{self.action_type} by {self.user} in {self.action_time}"
-    
+        return f"{self.action_type} by {self.actor_user} on {self.action_time}"
+
+        

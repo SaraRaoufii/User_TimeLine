@@ -196,40 +196,54 @@ class UserMutation(graphene.ObjectType):
 
 
 
-def send_edit(actoruser , targetuser, action_s , changes):
-    description = f"changes profile of user: {targetuser}\n"
-    for key,val in changes.items():
-        description += f"_{key}: old value {val['old_val']} changes to new value{val['new_val']} \n"
-       
-        
+import json
+
+def send_edit(actoruser, targetuser, action_s, changes):
     Logs.objects.create(
-        target_user=targetuser,
         actor_user=actoruser,
+        target_user=targetuser,
         action_type="UPDATE_PROFILE",
         action_status=action_s,
-        description=description,
+        action_title="Edit user",
+        category="Management",
+        description=json.dumps({
+            "message": f"Updated profile of user {targetuser.username}",
+            "fields_changed": changes
+        })
     )
+
 
 def send_delete(actoruser, targetuser):
     Logs.objects.create(
         actor_user=actoruser,
         target_user=targetuser,
         action_type="DELETE",
-        description=f"delete {targetuser} ",
+        action_title="Delete user",
+        category="Management",
+        description=json.dumps({
+            "message": f"Deleted user {targetuser.username}"
+        })
     )
+
         
-def send_create(actoruser, targetuser ):
+def send_create(actoruser, targetuser):
     Logs.objects.create(
         actor_user=actoruser,
         target_user=targetuser,
         action_type="CREATE",
-        description=f"create {targetuser}",
+        action_title="Create user",
+        category="Management",
+        description=json.dumps({
+            "message": f"Created user {targetuser.username}"
+        })
     )
+
 
 def send_login(user):
     Auth_Logs.objects.create(
         user=user,
         action_type="Login",
+        action_title="Login user",
         description=f"Login {user}"
     )
 
@@ -237,5 +251,6 @@ def send_logout(user):
     Auth_Logs.objects.create(
         user=user,
         action_type="Logout",
+        action_title="Logout user",
         description=f"Logout {user}"
     )
