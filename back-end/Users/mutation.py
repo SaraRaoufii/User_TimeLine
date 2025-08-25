@@ -5,7 +5,9 @@ from Users.models import Users
 from Users.type import UserType
 from Log.models import Logs
 from Log_Auth.models import Auth_Logs
-from django.contrib.auth import authenticate, logout
+import graphene
+from graphql_jwt.decorators import login_required
+from rest_framework_simplejwt.tokens import RefreshToken
 
 """
 class for creat new user with username, firstname, ...
@@ -99,6 +101,8 @@ class UpdateUser(graphene.Mutation):
                 target_user.address = address
             
             if role is not None and target_user.role!=role:
+                if current_user.role != "admin":
+                    raise Exception("Only admin can change roles")
                 changes["role"] = {"old_val": target_user.role , "new_val": role}
                 target_user.role = role
 
@@ -107,7 +111,7 @@ class UpdateUser(graphene.Mutation):
             return UpdateUser(user=target_user)
     
         except Exception as e:
-            send_edit(current_user,target_user, "FAILED" ,changes=changes)
+            send_edit(current_user, locals().get("target_user"), "FAILED", changes=changes)
             raise Exception(f"Update User Failed:{str(e)}")
 
 """
@@ -129,8 +133,8 @@ class DeleteUser(graphene.Mutation):
             raise Exception("target user not found")
         
         if current_user.id==target_user.id:
+            send_delete(current_user, target_user)
             target_user.delete()
-            send_delete(target_user)
             return DeleteUser(ok=True)
         
         if current_user.role!="admin":
@@ -139,51 +143,56 @@ class DeleteUser(graphene.Mutation):
         if target_user.role=="admin":
             raise Exception("You con not delete admin users")
         
-        target_user.delete()
         send_delete(current_user, target_user)
+        target_user.delete()
         return DeleteUser(ok=True)
 
-class LoginUser(graphene.Mutation):
-    class Arguments:
-        username = graphene.String(required=True)
-        password = graphene.String(required=True)
+class ObtainJSONWebToken(graphql_jwt.JSONWebTokenMutation):
+    user = graphene.Field(UserType)
 
+    @classmethod
+    def resolve(cls, root, info, **kwargs):
+        user = info.context.user
+        if user.is_authenticated:
+            send_login(user)
+        return cls(user=info.context.user)
+
+class RevokeToken(graphene.Mutation):
     success = graphene.Boolean()
     message = graphene.String()
-    user_id = graphene.ID()
-    tocken = graphene.String()
-    def mutate(self, info , username, password):
-        user = authenticate(username=username , password=password)
-        if user is None:
-            return LoginUser(success=False, message= "Your informaitions are false" , user_id=None)
-        else:
-            send_login(user)
-            tocken=get_token(user)
-            print(user)
-            return LoginUser(success=True, message= "You login successfull" , user_id=user.id, tocken=tocken)
 
+    class Arguments:
+        refresh_token = graphene.String(required=True)
+
+    @login_required
+    def mutate(self, info, refresh_token):
+        try:
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return RevokeToken(success=True, message="Token revoked successfully")
+        except Exception as e:
+            return RevokeToken(success=False, message=f"Failed to revoke token: {str(e)}")
+        
 class LogoutUser(graphene.Mutation):
     success = graphene.Boolean()
     message = graphene.String()
 
     def mutate(self, info):
         user = info.context.user
-        request = info.context
 
         if not user.is_authenticated:
             return LogoutUser(success=False, message="Invalid or missing token.")
 
         send_logout(user)
+        return LogoutUser(success=True, message="Logged out successfully")
 
-        logout(request)
-
-        return LogoutUser
 
 class AuthMutation(graphene.ObjectType):
-    login_user = LoginUser.Field()
-    logout_user = LogoutUser.Field()
+    token_auth = ObtainJSONWebToken.Field()
     verify_token = graphql_jwt.Verify.Field()
     refresh_token = graphql_jwt.Refresh.Field()
+    logout_user = LogoutUser.Field()
+    revoke_token = RevokeToken.Field()
 
 
 
@@ -191,8 +200,6 @@ class UserMutation(graphene.ObjectType):
     create_user = CreateUser.Field()
     update_user = UpdateUser.Field()
     delete_user = DeleteUser.Field()
-    login_user = LoginUser.Field()
-    logout_user = LogoutUser.Field()
 
 
 

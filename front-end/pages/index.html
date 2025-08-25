@@ -1,611 +1,153 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional User Profile</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
-            --accent: #2980b9;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
-            --gray: #7f8c8d;
-            --light-gray: #bdc3c7;
-            --management: #3498db;
-            --authentication: #9b59b6;
-            --create: #27ae60;
-            --edit: #f39c12;
-            --delete: #e74c3c;
-            --login: #1abc9c;
-            --logout: #34495e;
-            --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            --border-radius: 8px;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-        }
-        
-        body {
-            background-color: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-            margin-bottom: 25px;
-            border-bottom: 1px solid var(--light-gray);
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--primary);
-        }
-        
-        .logo i {
-            color: var(--secondary);
-        }
-        
-        .user-controls {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .btn {
-            padding: 8px 16px;
-            background: white;
-            border: 1px solid var(--light-gray);
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .btn-primary {
-            background: var(--secondary);
-            color: white;
-            border-color: var(--secondary);
-        }
-        
-        .btn:hover {
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .btn-primary:hover {
-            background: var(--accent);
-        }
-        
-        .page-title {
-            font-size: 1.8rem;
-            color: var(--primary);
-            margin-bottom: 5px;
-        }
-        
-        .breadcrumb {
-            display: flex;
-            gap: 8px;
-            color: var(--gray);
-            margin-bottom: 25px;
-        }
-        
-        .breadcrumb a {
-            color: var(--secondary);
-            text-decoration: none;
-        }
-        
-        .breadcrumb span {
-            color: var(--gray);
-        }
-        
-        .profile-container {
-            display: flex;
-            gap: 25px;
-            margin-bottom: 30px;
-        }
-        
-        @media (max-width: 768px) {
-            .profile-container {
-                flex-direction: column;
-            }
-        }
-        
-        .info-section {
-            flex: 1;
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
-            padding: 25px;
-        }
-        
-        .section-title {
-            font-size: 1.4rem;
-            color: var(--primary);
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--light);
-        }
-        
-        .user-info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-        }
-        
-        .info-item {
-            margin-bottom: 15px;
-        }
-        
-        .info-label {
-            font-weight: 600;
-            color: var(--gray);
-            margin-bottom: 5px;
-            font-size: 0.9rem;
-        }
-        
-        .info-value {
-            font-size: 1rem;
-            padding: 8px 0;
-        }
-        
-        .password-field {
-            position: relative;
-        }
-        
-        .password-field .info-value {
-            letter-spacing: 2px;
-            font-weight: 600;
-        }
-        
-        .divider {
-            height: 1px;
-            background: var(--light);
-            margin: 20px 0;
-        }
-        
-        .activity-section {
-            flex: 2;
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
-            padding: 25px;
-        }
-        
-        .activity-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .activity-filters {
-            display: flex;
-            gap: 15px;
-        }
-        
-        select {
-            padding: 8px 15px;
-            border: 1px solid var(--light-gray);
-            border-radius: var(--border-radius);
-            background: white;
-            font-size: 0.9rem;
-        }
-        
-        .timeline {
-            position: relative;
-            padding-left: 25px;
-            border-left: 2px solid var(--light);
-        }
-        
-        .timeline-item {
-            position: relative;
-            padding: 20px;
-            margin-bottom: 25px;
-            background: var(--light);
-            border-radius: var(--border-radius);
-            border-left: 4px solid;
-            transition: transform 0.3s ease;
-        }
-        
-        .timeline-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -30px;
-            top: 24px;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            border: 2px solid white;
-        }
-        
-        .timeline-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        
-        .log-type {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        
-        .log-action {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-        
-        .timestamp {
-            color: var(--gray);
-            font-size: 0.9rem;
-        }
-        
-        .user-ref {
-            margin: 8px 0;
-            font-weight: 500;
-        }
-        
-        .log-details {
-            margin-top: 15px;
-        }
-        
-        .detail-row {
-            display: flex;
-            margin-bottom: 8px;
-            font-size: 0.95rem;
-        }
-        
-        .detail-label {
-            font-weight: 600;
-            min-width: 120px;
-            color: var(--gray);
-        }
-        
-        .diff-container {
-            background: white;
-            padding: 12px;
-            border-radius: var(--border-radius);
-            margin-top: 10px;
-            border: 1px solid var(--light);
-        }
-        
-        .diff-row {
-            display: flex;
-            margin-bottom: 6px;
-            padding: 4px 0;
-        }
-        
-        .diff-label {
-            min-width: 100px;
-            font-weight: 500;
-            color: var(--gray);
-        }
-        
-        .diff-values {
-            flex: 1;
-        }
-        
-        .diff-old {
-            color: var(--delete);
-            text-decoration: line-through;
-            margin-right: 10px;
-        }
-        
-        .diff-new {
-            color: var(--create);
-            font-weight: 500;
-        }
-        
-        .div-arrow {
-            color: var(--gray);
-            margin: 0 10px;
-        }
-        
-        /* Log type colors */
-        .management-log {
-            border-left-color: var(--management);
-        }
-        
-        .management-log::before {
-            background: var(--management);
-        }
-        
-        .management-log .log-type {
-            background: rgba(52, 152, 219, 0.1);
-            color: var(--management);
-        }
-        
-        .authentication-log {
-            border-left-color: var(--authentication);
-        }
-        
-        .authentication-log::before {
-            background: var(--authentication);
-        }
-        
-        .authentication-log .log-type {
-            background: rgba(155, 89, 182, 0.1);
-            color: var(--authentication);
-        }
-        
-        /* Action icons */
-        .fa-user-edit { color: var(--edit); }
-        .fa-user-times { color: var(--delete); }
-        .fa-user-plus { color: var(--create); }
-        .fa-sign-in-alt { color: var(--login); }
-        .fa-sign-out-alt { color: var(--logout); }
-    </style>
+  <meta charset="UTF-8">
+  <title>Timeline Dashboard</title>
+  <style>
+    /* Reset */
+    * { margin:0; padding:0; box-sizing:border-box; font-family: sans-serif; }
+
+    body { display: flex; height: 100vh; background: #F3F4F6; }
+
+    /* Sidebar */
+    #sidebar {
+      width: 220px;
+      background: #fff;
+      border-right: 1px solid #ddd;
+      display: flex;
+      flex-direction: column;
+      transition: width 0.3s;
+    }
+    #sidebar.collapsed { width: 60px; }
+    #sidebar header {
+      padding: 1rem;
+      font-weight: bold;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #sidebar nav button {
+      padding: 0.8rem 1rem;
+      text-align: left;
+      border: none;
+      background: none;
+      cursor: pointer;
+      width: 100%;
+    }
+    #sidebar nav button:hover { background: #eee; }
+
+    /* Main area */
+    #main { flex: 1; display: flex; flex-direction: column; }
+
+    /* Header */
+    header { 
+      background: #1E3A8A; 
+      color: white; 
+      padding: 1rem; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    /* Timeline */
+    #timeline-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    .timeline-item {
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      border-left: 5px solid;
+      background: #f0f0f0;
+    }
+    .login { border-color: #10B981; background: #D1FAE5; }
+    .logout { border-color: #EF4444; background: #FEE2E2; }
+    .diff { border-color: #9CA3AF; background: #E5E7EB; }
+
+    .timeline-item .time { font-size: 0.8rem; color: #374151; float: right; }
+    .toggle-btn { cursor: pointer; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">
-                <i class="fas fa-user-shield"></i>
-                <span>Admin Portal</span>
-            </div>
-            <div class="user-controls">
-                <button class="btn">
-                    <i class="fas fa-cog"></i> Settings
-                </button>
-                <button class="btn btn-primary">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
-            </div>
-        </header>
-        
-        <div>
-            <h1 class="page-title">User Profile</h1>
-            <div class="breadcrumb">
-                <a href="#">Home</a>
-                <span>/</span>
-                <a href="#">Users</a>
-                <span>/</span>
-                <span>nima2025</span>
-            </div>
-        </div>
-        
-        <div class="profile-container">
-            <div class="info-section">
-                <h2 class="section-title">Information</h2>
-                
-                <div class="user-info-grid">
-                    <div class="info-item">
-                        <div class="info-label">User Name</div>
-                        <div class="info-value">nima2025</div>
-                    </div>
-                    
-                    <div class="info-item">
-                        <div class="info-label">First Name</div>
-                        <div class="info-value">nima</div>
-                    </div>
-                    
-                    <div class="info-item">
-                        <div class="info-label">Last Name</div>
-                        <div class="info-value">mirzaie</div>
-                    </div>
-                    
-                    <div class="info-item password-field">
-                        <div class="info-label">Password</div>
-                        <div class="info-value">••••••••</div>
-                    </div>
-                    
-                    <div class="info-item">
-                        <div class="info-label">Email</div>
-                        <div class="info-value">nima2025@example.com</div>
-                    </div>
-                    
-                    <div class="info-item">
-                        <div class="info-label">Phone Number</div>
-                        <div class="info-value">09123456789</div>
-                    </div>
-                    
-                    <div class="info-item" style="grid-column: span 2;">
-                        <div class="info-label">Address</div>
-                        <div class="info-value">No. 12, Elm Street, District 4, Tehran, Iran</div>
-                    </div>
-                </div>
-                
-                <div class="divider"></div>
-                
-                <div style="display: flex; gap: 12px; margin-top: 20px;">
-                    <button class="btn btn-primary">
-                        <i class="fas fa-edit"></i> Edit Profile
-                    </button>
-                    <button class="btn">
-                        <i class="fas fa-key"></i> Change Password
-                    </button>
-                </div>
-            </div>
-            
-            <div class="activity-section">
-                <div class="activity-header">
-                    <h2 class="section-title">Activity</h2>
-                    <div class="activity-filters">
-                        <select>
-                            <option>All Activities</option>
-                            <option>Management Logs</option>
-                            <option>Authentication Logs</option>
-                        </select>
-                        <select>
-                            <option>All Actions</option>
-                            <option>Create</option>
-                            <option>Edit</option>
-                            <option>Delete</option>
-                            <option>Login</option>
-                            <option>Logout</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="timeline">
-                    <!-- Management Log (Delete) -->
-                    <div class="timeline-item management-log">
-                        <div class="timeline-header">
-                            <div class="log-action">
-                                <i class="fas fa-user-times"></i>
-                                <span>User Deleted</span>
-                            </div>
-                            <div class="log-type">Management</div>
-                        </div>
-                        <div class="timestamp">07:51 | 20 Aug 2025</div>
-                        <div class="user-ref">User: nima2025 deleted by bahar_sh</div>
-                        <div class="log-details">
-                            <div class="detail-row">
-                                <div class="detail-label">Action by:</div>
-                                <div>bahar_sh (Admin)</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Authentication Log (Logout) -->
-                    <div class="timeline-item authentication-log">
-                        <div class="timeline-header">
-                            <div class="log-action">
-                                <i class="fas fa-sign-out-alt"></i>
-                                <span>User Logout</span>
-                            </div>
-                            <div class="log-type">Authentication</div>
-                        </div>
-                        <div class="timestamp">04:51 | 20 Aug 2025</div>
-                        <div class="user-ref">User: nima2025</div>
-                    </div>
-                    
-                    <!-- Management Log (Edit) -->
-                    <div class="timeline-item management-log">
-                        <div class="timeline-header">
-                            <div class="log-action">
-                                <i class="fas fa-user-edit"></i>
-                                <span>User Edited</span>
-                            </div>
-                            <div class="log-type">Management</div>
-                        </div>
-                        <div class="timestamp">16:30 | 11 Aug 2025</div>
-                        <div class="user-ref">User: nima2025 (self)</div>
-                        <div class="log-details">
-                            <div class="detail-row">
-                                <div class="detail-label">Changed by:</div>
-                                <div>Self</div>
-                            </div>
-                            <div class="detail-row">
-                                <div class="detail-label">Changes:</div>
-                                <div>2 fields modified</div>
-                            </div>
-                            <div class="diff-container">
-                                <div class="diff-row">
-                                    <div class="diff-label">Username:</div>
-                                    <div class="diff-values">
-                                        <span class="diff-old">nima2020</span>
-                                        <span class="div-arrow">→</span>
-                                        <span class="diff-new">nima2025</span>
-                                    </div>
-                                </div>
-                                <div class="diff-row">
-                                    <div class="diff-label">Email:</div>
-                                    <div class="diff-values">
-                                        <span class="diff-old">nima2020@example.com</span>
-                                        <span class="div-arrow">→</span>
-                                        <span class="diff-new">nima2025@example.com</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Authentication Log (Login) -->
-                    <div class="timeline-item authentication-log">
-                        <div class="timeline-header">
-                            <div class="log-action">
-                                <i class="fas fa-sign-in-alt"></i>
-                                <span>User Login</span>
-                            </div>
-                            <div class="log-type">Authentication</div>
-                        </div>
-                        <div class="timestamp">10:51 | 11 Aug 2025</div>
-                        <div class="user-ref">User: nima2020</div>
-                    </div>
-                    
-                    <!-- Authentication Log (Logout) -->
-                    <div class="timeline-item authentication-log">
-                        <div class="timeline-header">
-                            <div class="log-action">
-                                <i class="fas fa-sign-out-alt"></i>
-                                <span>User Logout</span>
-                            </div>
-                            <div class="log-type">Authentication</div>
-                        </div>
-                        <div class="timestamp">14:51 | 10 Aug 2025</div>
-                        <div class="user-ref">User: nima2025</div>
-                    </div>
-                    
-                    <!-- Management Log (Edit) -->
-                    <div class="timeline-item management-log">
-                        <div class="timeline-header">
-                            <div class="log-action">
-                                <i class="fas fa-user-edit"></i>
-                                <span>User Edited</span>
-                            </div>
-                            <div class="log-type">Management</div>
-                        </div>
-                        <div class="timestamp">16:30 | 11 Aug 2025</div>
-                        <div class="user-ref">User: nima2025 by Sanak</div>
-                        <div class="log-details">
-                            <div class="detail-row">
-                                <div class="detail-label">Changed by:</div>
-                                <div>Sanak (Admin)</div>
-                            </div>
-                            <div class="detail-row">
-                                <div class="detail-label">Changes:</div>
-                                <div>1 field modified</div>
-                            </div>
-                            <div class="diff-container">
-                                <div class="diff-row">
-                                    <div class="diff-label">First Name:</div>
-                                    <div class="diff-values">
-                                        <span class="diff-old">nimaa</span>
-                                        <span class="div-arrow">→</span>
-                                        <span class="diff-new">nima</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
+<div id="sidebar">
+  <header>
+    <span id="menu-text">منو</span>
+    <span class="toggle-btn" onclick="toggleSidebar()">☰</span>
+  </header>
+  <nav>
+    <button>کاربران</button>
+    <button>خروج</button>
+  </nav>
+</div>
+
+<div id="main">
+  <header>
+    <h1>Timeline Dashboard</h1>
+    <div>🧑‍💼 🔒</div>
+  </header>
+
+  <div id="timeline-container">
+    <!-- Timeline items will be added here -->
+  </div>
+</div>
+
+<script>
+  const timelineContainer = document.getElementById('timeline-container');
+  let timelineData = [];
+
+  // Sample data generator
+  function generateItems(count, startId=1) {
+    const items = [];
+    for(let i=0;i<count;i++){
+      const type = i%3===0 ? 'login' : i%3===1 ? 'logout' : 'diff';
+      items.push({
+        id: startId + i,
+        type,
+        text: `رویداد شماره ${startId + i}`,
+        time: new Date().toLocaleTimeString()
+      });
+    }
+    return items;
+  }
+
+  // Render function
+  function renderItems(items){
+    items.forEach(item=>{
+      const div = document.createElement('div');
+      div.className = `timeline-item ${item.type}`;
+      div.innerHTML = `<span>${item.text}</span><span class="time">${item.time}</span>`;
+      timelineContainer.appendChild(div);
+    });
+  }
+
+  // Initial load
+  timelineData = generateItems(20);
+  renderItems(timelineData);
+
+  // Infinite scroll
+  timelineContainer.addEventListener('scroll', () => {
+    if(timelineContainer.scrollTop + timelineContainer.clientHeight >= timelineContainer.scrollHeight - 10){
+      const newItems = generateItems(10, timelineData.length + 1);
+      timelineData = [...timelineData, ...newItems];
+      renderItems(newItems);
+    }
+  });
+
+  // Sidebar toggle
+  function toggleSidebar(){
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('collapsed');
+    document.getElementById('menu-text').style.display = sidebar.classList.contains('collapsed') ? 'none' : 'inline';
+  }
+</script>
+
 </body>
 </html>

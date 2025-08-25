@@ -1,20 +1,15 @@
-from .type import AuthLogsType
 import graphene
+from .type import AuthLogsType
 from .models import Auth_Logs
-from graphene_django.filter import DjangoFilterConnectionField
-
 
 class AuthLogsQuery(graphene.ObjectType):
-    all_auth_logs = graphene.List(AuthLogsType)
-    auth_logs_by_id = graphene.Field(AuthLogsType , id=graphene.ID(required=True))
-    
+    auth_logs = graphene.List(
+        AuthLogsType,
+        page=graphene.Int(default_value=1),
+        limit=graphene.Int(default_value=50)
+    )
 
-    def resolve_all_auth_logs(root , info):
-        return Auth_Logs.objects.all()
-    
-    def resolve_auth_logs_by_id(self, info , id):
-        try:
-            return Auth_Logs.objects.get(id=id)
-        except Auth_Logs.DoesNotExist:
-            return None
-
+    def resolve_auth_logs(root, info, page=1, limit=50):
+        offset = (page - 1) * limit
+        queryset = Auth_Logs.objects.all().order_by('-action_time')
+        return queryset[offset:offset + limit]

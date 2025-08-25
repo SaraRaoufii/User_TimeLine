@@ -5,15 +5,12 @@ from graphene_django.filter import DjangoFilterConnectionField
 
 
 class LogsQuery(graphene.ObjectType):
-    all_logs = graphene.List(LogsType)
-    logs_by_id = graphene.Field(LogsType , id=graphene.ID(required=True))
+    logs = graphene.List(
+        LogsType,
+        page=graphene.Int(),
+        limit=graphene.Int()
+    )
 
-    def resolve_all_logs(root , info):
-        return Logs.objects.all()
-    
-    def resolve_logs_by_id(self, info , id):
-        try:
-            return Logs.objects.get(id=id)
-        except Logs.DoesNotExist:
-            return None
-
+    def resolve_logs(root, info , page=1, limit=50):
+        offset = (page-1)*limit
+        return Logs.objects.all()[offset:offset+limit]

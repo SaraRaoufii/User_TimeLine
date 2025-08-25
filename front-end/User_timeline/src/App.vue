@@ -1,0 +1,24 @@
+<script setup>
+import {  RouterView } from 'vue-router'
+</script>
+
+<template>
+  <RouterView />
+</template>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
+
+body {
+ font-family: "Open Sans", sans-serif;
+ margin: 0;
+ padding: 0;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+
+</style>

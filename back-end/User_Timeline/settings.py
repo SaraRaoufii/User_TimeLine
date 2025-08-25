@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "rest_framework",
+    "rest_framework_simplejwt.token_blacklist",
     'graphene_django',
     'graphql_jwt',
     'django_filters',
@@ -50,7 +52,6 @@ INSTALLED_APPS = [
     'Users',
     'Log',
     'Log_Auth',
-    
     
 ]
 
@@ -157,6 +158,9 @@ GRAPHQL_JWT = {
     'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=7),
     'JWT_SECRET_KEY': SECRET_KEY,
     'JWT_ALGORITHM': "HS256",
+    'JWT_BLACKLIST_ENABLED': True,
+
+
 }
 
 

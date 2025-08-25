@@ -4,14 +4,14 @@ from Users.mutation import UserMutation,AuthMutation
 from Log.mutation import LogMutation
 from Log.query import LogsQuery
 from Log_Auth.query import AuthLogsQuery
-
+from .Alllogs import CombinedLogsQuery
 
 
 
 class Mutation(UserMutation, LogMutation, AuthMutation,  graphene.ObjectType):
     pass
 
-class Query(UserQuery, LogsQuery, AuthLogsQuery ,graphene.ObjectType):
+class Query(UserQuery, LogsQuery, AuthLogsQuery, CombinedLogsQuery ,graphene.ObjectType):
     pass
     
     
