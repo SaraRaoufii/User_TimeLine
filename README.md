@@ -29,13 +29,6 @@
 
 ---
 
-## وضعیت فعلی پروژه
-
-- تست‌ها هنوز نوشته نشده‌اند
-- تنها خروجی CSV برای کاربران موجود است
-
----
-
 ## پیش‌نیازها
 
 قبل از اجرا باید ابزارهای زیر نصب باشند:
@@ -43,7 +36,7 @@
 - Python 3.10+
 - Node.js 18+
 - PostgreSQL
-- Docker (اختیاری)
+
 
 ---
 
@@ -52,5 +45,5 @@
 ### 1. کلون کردن پروژه
 
 ```bash
-git clone https://github.com/username/User_TimeLine.git
+git clone https://github.com/SaraRaoufii/User_TimeLine.git
 cd User_TimeLine
