@@ -1,10 +1,11 @@
 <template>
     <div>
-        <UsersFilter @applyFilter="handleFilter"  />
+        <UsersFilter  :users="Users" @applyFilter="handleFilter"  />
         <div v-if="loading">Loading...</div>
         <div v-else-if="error"></div>
         <div v-else>
         <div class="flex flex-col h-[530px]">
+          
         <v-table class="mt-4 mr-5 border border-gray-200 shadow w-full">
         <thead>
           <tr>
@@ -19,6 +20,7 @@
               <th class="text-left !bg-lightblue">Status</th>
               <th class="text-left !bg-lightblue">View</th>
               <th class="text-left !bg-lightblue">Actions</th>
+              
 
             </tr>
         </thead>
@@ -332,6 +334,7 @@ const goToEditUser = (user) => {
     query: { id: user.id, edit: true } 
   })
 }
+
 
 
 </script>
