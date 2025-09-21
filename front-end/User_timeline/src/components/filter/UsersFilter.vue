@@ -25,10 +25,10 @@
 <v-btn
   @click="downloadCSV"
   icon
-  size="small"
-  class="bg-lightgreen text-darkgreen hover:bg-darkgreen hover:text-white rounded-sm shadow-sm"
+  size="small" 
+  class="bg-gray-50"
 >
-  <Download class="w-5 h-5 stroke-[1.7]" />
+  <Download class="w-5 h-5 stroke-[1.7] text-darkgreen" />
 </v-btn>
 
 

@@ -120,3 +120,8 @@ python manage.py runserver
 * **لاگ‌ها:** امکان تنظیم سطح و خروجی لاگ‌ها در `settings.py`
 
 ---
+
+
+![نمایش تایم‌لاین کاربران](images/timeline.png)
+
+![نمایش لیست کاربران](images/userlist.png)
