@@ -14,7 +14,7 @@
 import { defineProps } from 'vue';
 
 const props = defineProps({
-  icon: Object, 
+  icon: [Object, Function],
   count: Number,
   title: String
 });

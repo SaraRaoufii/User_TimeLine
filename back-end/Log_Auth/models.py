@@ -8,6 +8,8 @@ class Auth_Logs(models.Model):
     Actions_Types = [
         ("Login" , "Log_in"),
         ("Logout" , "Log_out"),
+        ("LOGIN_FAILED", "Log_Failed"),
+        ("LOCK_USER", "Lock"),
     ]
     Action_Status= [
         ("SUCCESS","Success"),

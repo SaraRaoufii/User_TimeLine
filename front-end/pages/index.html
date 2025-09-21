@@ -1,153 +1,191 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>Timeline Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Management Dashboard</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
-    /* Reset */
-    * { margin:0; padding:0; box-sizing:border-box; font-family: sans-serif; }
-
-    body { display: flex; height: 100vh; background: #F3F4F6; }
-
-    /* Sidebar */
-    #sidebar {
-      width: 220px;
-      background: #fff;
-      border-right: 1px solid #ddd;
-      display: flex;
-      flex-direction: column;
-      transition: width 0.3s;
+    @font-face {
+      font-family: 'Vazirmatn';
+      src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.0.3/Vazirmatn-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
     }
-    #sidebar.collapsed { width: 60px; }
-    #sidebar header {
-      padding: 1rem;
-      font-weight: bold;
-      border-bottom: 1px solid #ddd;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      background-color: #f3f4f6;
     }
-    #sidebar nav button {
-      padding: 0.8rem 1rem;
-      text-align: left;
-      border: none;
-      background: none;
-      cursor: pointer;
-      width: 100%;
+    
+    .sidebar {
+      background-color: #1e3a8a;
+      transition: width 0.3s ease;
     }
-    #sidebar nav button:hover { background: #eee; }
-
-    /* Main area */
-    #main { flex: 1; display: flex; flex-direction: column; }
-
-    /* Header */
-    header { 
-      background: #1E3A8A; 
-      color: white; 
-      padding: 1rem; 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 10;
+    
+    .sidebar-item {
+      color: #bfdbfe;
+      border-right: 4px solid transparent;
+      transition: all 0.2s;
     }
-
-    /* Timeline */
-    #timeline-container {
-      flex: 1;
-      overflow-y: auto;
-      padding: 1rem;
+    
+    .sidebar-item:hover, .sidebar-item.active {
+      background-color: #172d68;
+      border-right-color: #60a5fa;
+      color: #ffffff;
     }
-
-    .timeline-item {
-      padding: 1rem;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      border-left: 5px solid;
-      background: #f0f0f0;
-    }
-    .login { border-color: #10B981; background: #D1FAE5; }
-    .logout { border-color: #EF4444; background: #FEE2E2; }
-    .diff { border-color: #9CA3AF; background: #E5E7EB; }
-
-    .timeline-item .time { font-size: 0.8rem; color: #374151; float: right; }
-    .toggle-btn { cursor: pointer; }
   </style>
 </head>
-<body>
+<body class="flex min-h-screen">
 
-<div id="sidebar">
-  <header>
-    <span id="menu-text">منو</span>
-    <span class="toggle-btn" onclick="toggleSidebar()">☰</span>
-  </header>
-  <nav>
-    <button>کاربران</button>
-    <button>خروج</button>
-  </nav>
-</div>
+  <aside class="sidebar w-64 p-6 flex flex-col justify-between">
+    <div>
+      <h1 class="text-white text-2xl font-bold mb-8">سامانه مدیریت کاربران</h1>
+      <nav>
+        <a href="#" class="sidebar-item active flex items-center p-4 rounded-lg mb-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2z" />
+          </svg>
+          داشبورد
+        </a>
+        <a href="#" class="sidebar-item flex items-center p-4 rounded-lg mb-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm-6-7a7 7 0 00-6 0v6h12v-6a7 7 0 00-6-6z" />
+          </svg>
+          لیست کاربران
+        </a>
+        <a href="#" class="sidebar-item flex items-center p-4 rounded-lg mb-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+          </svg>
+          لاگ‌های مدیریتی
+        </a>
+        <a href="#" class="sidebar-item flex items-center p-4 rounded-lg mb-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0v4m-5 4a3 3 0 11-6 0 3 3 0 016 0zM12 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          لاگ‌های احراز هویت
+        </a>
+      </nav>
+    </div>
+    
+    <div class="flex items-center text-white py-4 px-2 rounded-lg bg-blue-900">
+      <div class="h-10 w-10 bg-gray-500 rounded-full flex items-center justify-center text-xl font-bold ml-3">A</div>
+      <div>
+        <div class="font-semibold">admin1</div>
+        <div class="text-sm text-gray-300">ADMIN</div>
+      </div>
+    </div>
+  </aside>
 
-<div id="main">
-  <header>
-    <h1>Timeline Dashboard</h1>
-    <div>🧑‍💼 🔒</div>
-  </header>
+  <main class="flex-grow p-8">
+    <header class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold text-gray-800">داشبورد</h1>
+      <button class="bg-blue-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        </svg>
+        افزودن کاربر
+      </button>
+    </header>
 
-  <div id="timeline-container">
-    <!-- Timeline items will be added here -->
-  </div>
-</div>
+    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white p-6 rounded-lg shadow-sm">
+        <h3 class="text-gray-500 text-sm font-semibold uppercase">تعداد کل کاربران</h3>
+        <p class="mt-2 text-4xl font-bold text-blue-600">10</p>
+      </div>
+      <div class="bg-white p-6 rounded-lg shadow-sm">
+        <h3 class="text-gray-500 text-sm font-semibold uppercase">مدیران</h3>
+        <p class="mt-2 text-4xl font-bold text-blue-600">4</p>
+      </div>
+      <div class="bg-white p-6 rounded-lg shadow-sm">
+        <h3 class="text-gray-500 text-sm font-semibold uppercase">کاربران فعال</h3>
+        <p class="mt-2 text-4xl font-bold text-blue-600">7</p>
+      </div>
+      <div class="bg-white p-6 rounded-lg shadow-sm">
+        <h3 class="text-gray-500 text-sm font-semibold uppercase">ورودهای ناموفق (24h)</h3>
+        <p class="mt-2 text-4xl font-bold text-red-500">10</p>
+      </div>
+    </section>
 
-<script>
-  const timelineContainer = document.getElementById('timeline-container');
-  let timelineData = [];
-
-  // Sample data generator
-  function generateItems(count, startId=1) {
-    const items = [];
-    for(let i=0;i<count;i++){
-      const type = i%3===0 ? 'login' : i%3===1 ? 'logout' : 'diff';
-      items.push({
-        id: startId + i,
-        type,
-        text: `رویداد شماره ${startId + i}`,
-        time: new Date().toLocaleTimeString()
-      });
-    }
-    return items;
-  }
-
-  // Render function
-  function renderItems(items){
-    items.forEach(item=>{
-      const div = document.createElement('div');
-      div.className = `timeline-item ${item.type}`;
-      div.innerHTML = `<span>${item.text}</span><span class="time">${item.time}</span>`;
-      timelineContainer.appendChild(div);
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="bg-white p-6 rounded-lg shadow-sm lg:col-span-2">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">ثبت‌نام کاربران (۶ ماه اخیر)</h3>
+        <canvas id="user-signup-chart"></canvas>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow-sm">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">فعالیت‌های اخیر</h3>
+        <ul class="space-y-4">
+          <li class="flex items-center">
+            <span class="text-gray-400 text-sm font-medium ml-2">۱۴:۳۲</span>
+            <p class="text-gray-700">
+              <span class="font-bold">کاربر علی</span> وارد سیستم شد.
+            </p>
+          </li>
+          <li class="flex items-center">
+            <span class="text-gray-400 text-sm font-medium ml-2">۱۴:۲۸</span>
+            <p class="text-gray-700">
+              <span class="font-bold">مدیر رضا</span> کاربر مریم را غیرفعال کرد.
+            </p>
+          </li>
+          <li class="flex items-center">
+            <span class="text-gray-400 text-sm font-medium ml-2">۱۳:۵۵</span>
+            <p class="text-gray-700">
+              <span class="font-bold">کاربر جدید سارا</span> ثبت‌نام کرد.
+            </p>
+          </li>
+          <li class="flex items-center">
+            <span class="text-gray-400 text-sm font-medium ml-2">۱۳:۱۰</span>
+            <p class="text-gray-700">
+              <span class="font-bold">مدیر رضا</span> اطلاعات کاربر احمد را ویرایش کرد.
+            </p>
+          </li>
+          <li class="flex items-center">
+            <span class="text-gray-400 text-sm font-medium ml-2">۱۲:۴۰</span>
+            <p class="text-gray-700">
+              <span class="font-bold">کاربر امیر</span> وارد سیستم شد.
+            </p>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+  
+  <script>
+    const ctx = document.getElementById('user-signup-chart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور'],
+        datasets: [{
+          label: 'کاربران جدید',
+          data: [12, 19, 3, 5, 2, 3],
+          backgroundColor: 'rgba(59, 130, 246, 0.7)',
+          borderColor: 'rgb(59, 130, 246)',
+          borderWidth: 1,
+          borderRadius: 6,
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
     });
-  }
-
-  // Initial load
-  timelineData = generateItems(20);
-  renderItems(timelineData);
-
-  // Infinite scroll
-  timelineContainer.addEventListener('scroll', () => {
-    if(timelineContainer.scrollTop + timelineContainer.clientHeight >= timelineContainer.scrollHeight - 10){
-      const newItems = generateItems(10, timelineData.length + 1);
-      timelineData = [...timelineData, ...newItems];
-      renderItems(newItems);
-    }
-  });
-
-  // Sidebar toggle
-  function toggleSidebar(){
-    const sidebar = document.getElementById('sidebar');
-    sidebar.classList.toggle('collapsed');
-    document.getElementById('menu-text').style.display = sidebar.classList.contains('collapsed') ? 'none' : 'inline';
-  }
-</script>
+  </script>
 
 </body>
 </html>

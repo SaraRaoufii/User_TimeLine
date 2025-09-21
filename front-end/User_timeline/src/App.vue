@@ -1,10 +1,28 @@
 <script setup>
-import {  RouterView } from 'vue-router'
+import {  RouterView, useRouter } from 'vue-router'
+import Alert from './components/Alert.vue';
+import { useApolloClient } from '@vue/apollo-composable'
+
+const router = useRouter()
+const apolloClient = useApolloClient().client
+
+router.afterEach(() => {
+  apolloClient.resetStore()
+})
 </script>
 
 <template>
-  <RouterView />
+  <div class="app-root">
+    <router-view v-slot="{ Component, route }">
+      <keep-alive>
+        <component :is="Component" :key="route.fullPath" />
+      </keep-alive>
+    </router-view>
+    <Alert />
+  </div>
 </template>
+
+
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');

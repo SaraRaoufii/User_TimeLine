@@ -15,4 +15,4 @@ class Query(UserQuery, LogsQuery, AuthLogsQuery, CombinedLogsQuery ,graphene.Obj
     pass
     
     
-schema = graphene.Schema(query=Query , mutation=Mutation)
+schema = graphene.Schema(query=Query, mutation=Mutation, auto_camelcase=True)

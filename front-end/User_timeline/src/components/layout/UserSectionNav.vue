@@ -13,12 +13,15 @@
         {{ userInitial }}
       </div>
       <div class="user-details ml-3 overflow-hidden">
-        <div class="username font-semibold text-xs truncate hover:underline">
+        <div class="username font-semibold text-xs truncate hover:underline" @click="goToUser(userStore.currentUser.username)"> 
           {{ userStore.currentUser.username }}
         </div>
         <p class="role text-[11px] truncate text-graysecond/80">
           {{ userStore.currentUser.role }}
         </p>
+      </div>
+      <div class="pl-11">
+          <LogOut class="w-6 h-6 text-maincolor" @click="handleLogout" />
       </div>
     </div>
   </div>
@@ -27,9 +30,13 @@
 <script setup>
 import { computed } from 'vue';
 import { useUserStore } from '@/stores/user';
+import { useRouter } from 'vue-router'
+import { LogOut, UserStar } from 'lucide-vue-next'
+import { useAlertStore} from '@/stores/alert'
 
+const alertStore = useAlertStore()
 const userStore = useUserStore();
-
+const router = useRouter()
 const props = defineProps({
   isCollapsed: Boolean,
   isMobile: {
@@ -41,4 +48,12 @@ const props = defineProps({
 const userInitial = computed(() =>
   userStore.currentUser?.username?.charAt(0).toUpperCase() || ''
 );
+ const goToUser = (username) => {
+  router.push(`/userpanel/${username}`)
+}
+const handleLogout = ()=>{
+  userStore.logout()
+  router.push('/login')
+  alertStore.show('Youhave been loged out' , 'success')
+}
 </script>

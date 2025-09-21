@@ -1,5 +1,5 @@
-<template  v-if="fieldsChanged" >
-  <div class="timeline-container relative flex flex-row gap-2.5 p-[18px] max-[600px]:flex-col max-[600px]:p-3 max-[600px]:pr-[30px] max-[600px]:gap-2">
+<template v-show="fieldsChanged">
+  <div class="timeline-container relative flex flex-row gap-2.5 p-[18px] max-[600px]:flex-col max-[600px]:p-3 max-[600px]:pr-[30px] max-[600px]:gap-2 ">
 
     <div class="timeline-line absolute top-0 bottom-0 left-[35px] w-[1px] h-auto border-l-2 border-dashed border-graysecond -z-[2] max-[600px]:left-[28px]"></div>
     
@@ -14,10 +14,10 @@
     </div>
     
 
-<div :class="[
-  'timeline-content bg-grayback rounded-[5px] border-l-4 h-auto p-[6px] ml-[10px] max-[600px]:w-full flex-grow',
-  borderClass
-]">
+  <div :class="[
+    'timeline-content bg-grayback rounded-[5px] border-l-4 h-auto p-[6px] ml-[10px] max-[600px]:w-full flex-grow',
+    borderClass
+  ]">
 
 
       <div class="timeline-header flex justify-between items-center pr-[5px] max-[600px]:flex-col max-[600px]:items-start max-[600px]:gap-1">
@@ -33,7 +33,7 @@
               Email: {{ targetUser.email }}
             </div>
           </span>
-          by
+          <span v-if="category.toLowerCase() === 'management'"> by </span>
           <span v-if="user?.username" class="user-tooltip relative font-medium cursor-pointer mx-[4px] max-[600px]:mx-[2px]"
                 @mouseover="showUserDetails = true"
                 @mouseleave="showUserDetails = false">
@@ -45,10 +45,20 @@
             </div>
           </span>
         </div>
-        <div class="timeline-dates text-[14px] text-graysecond max-[600px]:text-[12px] max-[600px]:pl-[7px]">
+        <div class="timeline-dates flex items-center gap-2 text-graysecond">
           <div>{{ relativeDate }}</div>
           <div>{{ exactDate }}</div>
+          <button 
+           v-if="category.toLowerCase() === 'management' && !isProtected"
+            @click="confirmDeleteLog"
+            class="p-1 text-red-500 hover:text-red-700"
+            title="Delete log"
+          >
+          
+            <Trash2 class="w-4 h-4" />
+          </button>
         </div>
+
       </div>
 
 
@@ -86,8 +96,22 @@
       <MoveRight class="change-icon relative top-[2px] w-[22px] stroke-[1.5] text-maincolor mx-[6px] max-[600px]:w-[18px] max-[600px]:mx-1" />
     <span class="text-black bg-lightgreen px-1 rounded pl-[2px] font-light max-[600px]:text-[12px]">{{ change.new_val }}</span>
     </div>
+    
 
     </div>
+
+<v-dialog v-model="showDeleteConfirm" max-width="400">
+    <v-card class="border-b-4 border-darkred">
+    <v-card-title class="text-lg font-bold">Confirm Delete</v-card-title>
+    <v-card-text>
+      Are you sure you want to delete this log? This action cannot be undone.
+    </v-card-text>
+    <v-card-actions class="justify-end gap-2">
+      <v-btn text @click="showDeleteConfirm = false">Cancel</v-btn>
+      <v-btn color="darkred" @click="deleteLog">Delete</v-btn>
+    </v-card-actions>
+  </v-card>
+</v-dialog>
   </div>
 </template>
 
@@ -95,6 +119,7 @@
 <script setup>
 import { ref, computed } from 'vue'    
 import { MoveRight } from 'lucide-vue-next';
+import { Trash2 } from 'lucide-vue-next'
 
 const props = defineProps({
   date: {
@@ -141,10 +166,20 @@ const props = defineProps({
     type: String,
     default: ''
   },
+  isProtected: {
+  type: Boolean,
+  default: false
+},
+  logId: {
+    type: [String, Number],
+    required: true
+  },
 })
+
 
 const showUserDetails = ref(false)
 const showTargetUserDetails = ref(false)
+const showDeleteConfirm = ref(false)
 
 const categoryClass = computed(() => {
   switch (props.category.toLowerCase()) {
@@ -153,6 +188,17 @@ const categoryClass = computed(() => {
     default: return ''
   }
 })
+const emit = defineEmits(['deleteLog'])
+
+function deleteLog() {
+  emit('deleteLog', props.logId)
+  showDeleteConfirm.value = false
+}
+
+const confirmDeleteLog = () => {
+  showDeleteConfirm.value = true; 
+};
+
 
 const borderClass = computed(() => {
   switch (props.category.toLowerCase()) {

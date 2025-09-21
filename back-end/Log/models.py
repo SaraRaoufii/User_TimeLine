@@ -4,11 +4,12 @@ from Users.models import Users
 class Logs(models.Model):
     Actions_Types = [
         ("CREATE", "Create"),
-        ("READ", "Read"),
         ("UPDATE_PROFILE" , "Update_profile"),
-        ("DELETE" , "Delete"),
+        ("DELETE_USER" , "Delete_user"),
+        ("DEACTIVATE_USER", "Deactivate_user"),
         ("DELETE_ALL_LOGS" , "Delete_All_Logs"),
-        ("DELETE_LOGS" , "Delete_log"),
+        ("DELETE_LOG" , "Delete_log"),
+        ("RESET_LOCK" , "Reset_user_lock")
     ]
     Action_Status= [
         ("SUCCESS","Success"),
@@ -23,10 +24,8 @@ class Logs(models.Model):
     category = models.CharField(max_length=255 , blank=True , null=True)
     description = models.TextField(blank=True , null=True)
     is_protected = models.BooleanField(default=False)
-    
-
 
 
     def __str__(self) -> str:
-        return f"{self.action_type} by {self.user} in {self.action_time}"
+        return f"{self.action_type} by {self.actor_user} "
     

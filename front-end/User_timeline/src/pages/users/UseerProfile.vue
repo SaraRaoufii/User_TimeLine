@@ -1,6 +1,7 @@
 <script setup>
 import Mainlayout from '@/components/layout/MainLayout.vue'
-import Timelinelist from '@/components/activity/LogLists.vue'
+import LogList from '@/components/activity/LogList.vue'
+import TimelineComponent from '@/components/activity/TimelineComponent.vue'
 import UserInfo from '@/components/users/UserInfo.vue'
 import EditUser from '@/components/users/EditUser.vue'
 import { ref, computed, watch } from 'vue'
@@ -37,20 +38,27 @@ const GET_USER_BY_USERNAME = gql`
       firstName
       lastName
       id
-      isStaff
       isActive
       password
+      isLocked
+      failedLoginAttempts
     }
   }
 `
 
 const loading = ref(false)
 const error = ref(null)
+const safeError = ref(null)
 
 if (!isOwnProfile.value) {
   const { result, loading: l, error: e } = useQuery(GET_USER_BY_USERNAME, { username })
   watch(l, (val) => (loading.value = val))
-  watch(e, (val) => (error.value = val))
+    watch(e, (val) => {
+    if (val) {
+      console.error('Apollo error:', val) 
+      safeError.value = 'Failed to load user info. Please try again later.'
+    }
+  })
   watch(result, (val) => {
     profileUser.value = val?.userByUsername || {}
   })
@@ -83,7 +91,7 @@ watch(
   >
     <div class="tabs w-full mt-6 ml-1">
 
-      <div class="styletab flex gap-4 bg-white border-b border-grayback rounded-lg shadow-sm overflow-x-auto">
+      <div class="styletab flex gap-4 bg-white border-b border-grayback overflow-x-auto">
         <button
           @click="tab = 'tab-1'"
           :class="[
@@ -109,7 +117,6 @@ watch(
         </button>
       </div>
 
-      <!-- Tab Content -->
       <div class="v-tabs-window mt-5">
         <div v-show="tab === 'tab-1'" class="v-tabs-window-item">
           <UserInfo
@@ -127,7 +134,17 @@ watch(
         </div>
 
         <div v-show="tab === 'tab-2'" class="v-tabs-window-item">
-          <Timelinelist :username="username"/>
+          <LogList :username="username">
+          <template #default="{ logs, loading, isLastPage, handleScroll }">
+              <TimelineComponent 
+                :filteredTimeline="logs" 
+                :loading="loading" 
+                :isLastPage="isLastPage" 
+                @scroll="handleScroll"
+              />
+
+          </template>
+        </LogList>
         </div>
       </div>
     </div>

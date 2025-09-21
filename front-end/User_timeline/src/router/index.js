@@ -7,6 +7,7 @@ const routes = [
   { path: '/userpanel/:username', name: 'userpanel', component: () => import('../pages/users/UseerProfile.vue'), meta: { requiresAuth: true } },
   { path: '/userslistpage', name:'userslist', component:() => import('../pages/users/UsersListPage.vue'), meta: { requiresAuth: true } },
   { path: '/managelogs', name: 'managelogs', component: () => import('../pages/logs/ManageLogs.vue'), meta: { requiresAuth: true } },
+  { path: '/createuser', name: 'createuser', component: () => import('../pages/users/CreateNewUser.vue'), meta: { requiresAuth: true } },
   { path: '/authlogs', name: 'authlogs', component: () => import('../pages/logs/AuthLogs.vue'), meta: { requiresAuth: true } },
 ]
 
@@ -16,6 +17,7 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
+  document.querySelectorAll('.tooltip').forEach(el => el.remove())
   const userStore = useUserStore()
 
   if (to.name === 'Login') return next()
@@ -33,6 +35,7 @@ router.beforeEach(async (to, from, next) => {
   } else {
     next()
   }
+  
 })
 
 export default router
